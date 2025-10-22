@@ -2,6 +2,9 @@ package main
 
 import "fmt"
 
+type Speaker interface {
+	Speak() string
+}
 type Lion struct{ Name string }
 
 // value receiver: both Dog and *Dog implement Speaker
