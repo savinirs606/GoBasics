@@ -9,4 +9,11 @@ func main() {
 	//ReverseString("Hello World")
 	//ReverseWordsInAString("Hello World")
 	//ListOperations()
+
+	// docker file
+	// palindrome
+	// prefix sum
+	// sliding window
+	// goroutines
+	// composition over inheritance
 }
