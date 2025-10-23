@@ -24,6 +24,10 @@ var sampleIntegerArray = [3]int{}
 // reverse -1
 
 func slices() {
+
+	inputSliceForBubbleSort := []int{9, 8, 7, 6, 5, 4, 3, 2, 1}
+	fmt.Printf("Bubble Sort \n %v \n", BubbleSort(inputSliceForBubbleSort))
+
 	sampleIntegerSlice := []int{1, 2, 3, 4, 5, 6}
 
 	fmt.Println("Sample Slice:", sampleIntegerSlice)
@@ -56,4 +60,26 @@ func findMax(s []int) int {
 		}
 	}
 	return maxVal
+}
+
+func BubbleSort(s []int) []int {
+	for i := 0; i < len(s); i++ {
+		for j := 1; j < len(s)-i; j++ {
+			if s[j-1] > s[j] {
+				s[j-1], s[j] = swap(s[j-1], s[j])
+				// s[j-1], s[j] = s[j], s[j-1]
+			}
+		}
+	}
+	return s
+}
+
+func swap(a, b int) (int, int) {
+	if a == b {
+		return a, b
+	}
+	a = a + b
+	b = a - b
+	a = a - b
+	return a, b
 }

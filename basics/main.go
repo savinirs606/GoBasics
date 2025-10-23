@@ -5,5 +5,8 @@ func main() {
 	// type assertion
 	//typeassertion()
 
-	slices()
+	//slices()
+	//ReverseString("Hello World")
+	//ReverseWordsInAString("Hello World")
+	//ListOperations()
 }
