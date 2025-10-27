@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
 
 	// type assertion
@@ -16,4 +18,9 @@ func main() {
 	// sliding window
 	// goroutines
 	// composition over inheritance
+
+	s := "hello world"
+	for i := 0; i < len(s); i++ {
+		fmt.Println(string(s[i]))
+	}
 }
