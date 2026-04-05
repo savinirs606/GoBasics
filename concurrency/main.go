@@ -4,56 +4,59 @@ import (
 	"fmt"
 )
 
-func printOdd(oddChan, evenChan chan int, limit int, done chan bool) {
-	for num := range oddChan {
-		fmt.Println(num)
-		if num >= limit-1 {
-			close(evenChan) // stop even goroutine
-			done <- true
-			return
-		}
-		evenChan <- num + 1
+func OddEvenPrint() {
+	n := 10
+	wg := &sync.WaitGroup{}
+
+	oddChan, evenChan := make(chan bool), make(chan bool)
+
+	wg.Add(2)
+	go PrintOdd(n, oddChan, evenChan, wg)
+
+	go PrintEven(n, oddChan, evenChan, wg)
+	oddChan <- true
+	wg.Wait()
+}
+
+func FanIn() {
+	// Create a single channel to collect results
+	out := make(chan string)
+
+	// Start multiple workers (fan-in)
+	for i := 1; i <= 3; i++ {
+		go FanInWorker(i, out)
+	}
+
+	// Collect results from all workers
+	for i := 0; i < 9; i++ { // 3 workers × 3 messages each
+		fmt.Println(<-out)
 	}
 }
-func main() {
-	oddChan := make(chan int)
-	evenChan := make(chan int)
-	done := make(chan bool)
-	limit := 102
-	// Odd printer
-	go printOdd(oddChan, evenChan, limit, done)
 
-	// Even printer
-	go func(limit int) {
-		for num := range evenChan {
-			fmt.Println(num)
-			if num >= limit {
-				close(oddChan) // stop odd goroutine
-				done <- true
-				return
-			}
-			oddChan <- num + 1
-		}
-	}(limit)
+func FanOut() {
+	const numJobs = 5
+	const numWorkers = 3
 
-	// Start sequence
-	oddChan <- 1
+	jobs := make(chan int, numJobs)
+	wg := &sync.WaitGroup{}
 
-	// Wait for completion (only one signal needed)
-	<-done
+	// Start multiple workers (fan-out)
+	for w := 1; w <= numWorkers; w++ {
+		wg.Add(1)
+		go FanOutWorker(w, jobs, wg)
+	}
+
+	// Send jobs into the channel
+	for j := 1; j <= numJobs; j++ {
+		jobs <- j
+	}
+	close(jobs) // important: close channel so workers exit
+
+	wg.Wait()
 }
 
-//package main
-//
-//func main() {
-//	// Channels:
-//	/*
-//		// Unbuffered Channel
-//		MakeUnbufferedChannel()
-//		// buffered channel
-//		MakeBufferedChannel()
-//
-//	*/
-//	fanOut()
-//
-//}
+func main() {
+	//OddEvenPrint()
+	//FanIn()
+	FanOut()
+}
