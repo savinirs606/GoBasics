@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"sync"
 )
 
-func OddEvenPrint() {
-	n := 10
+func OddEvenPrint(n int) {
 	wg := &sync.WaitGroup{}
 
 	oddChan, evenChan := make(chan bool), make(chan bool)
@@ -14,7 +14,8 @@ func OddEvenPrint() {
 	go PrintOdd(n, oddChan, evenChan, wg)
 
 	go PrintEven(n, oddChan, evenChan, wg)
-	oddChan <- true
+
+	evenChan <- true
 	wg.Wait()
 }
 
@@ -56,7 +57,7 @@ func FanOut() {
 }
 
 func main() {
-	//OddEvenPrint()
+	OddEvenPrint(10)
 	//FanIn()
-	FanOut()
+	//FanOut()
 }
